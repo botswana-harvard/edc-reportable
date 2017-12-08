@@ -55,3 +55,15 @@ Reportable clinic events, reference ranges, grading
 
     neutrophils.add_grading(g3)
     neutrophils.add_grading(g4)
+
+    neutrophils.in_bounds_for_grade(
+        value=0.43, units='10e9/L',
+        gender=MALE, dob=dob, report_datetime=report_datetime)
+    neutrophils.grade
+    >>> 3
+
+    neutrophils.in_bounds_for_grade(
+        value=0.3, units='10e9/L',
+        gender=MALE, dob=dob, report_datetime=report_datetime)
+    neutrophils.grade
+    >>> 4
