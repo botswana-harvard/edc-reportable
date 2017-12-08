@@ -20,3 +20,38 @@ Reportable clinic events, reference ranges, grading
         gender=[MALE, FEMALE])
     neutrophils.add_normal(ref)
     reference.register(neutrophils)
+    
+    neutrophils = reference.get('neutrophils')
+    neutrophils.in_bounds(
+        value=3.5, units='10e9/L',
+        gender=MALE, dob=dob, report_datetime=report_datetime)
+    >>> True  # normal
+
+### Grading
+
+    g3 = GradeReference(
+        name='neutrophils',
+        grade=3,
+        lower=0.4,
+        lower_inclusive=True,
+        upper=0.59,
+        upper_inclusive=True,
+        units='10e9/L',
+        age_lower=18,
+        age_upper=99,
+        age_units='years',
+        gender=[MALE, FEMALE])
+
+    g4 = GradeReference(
+        name='neutrophils',
+        grade=4,
+        lower=None,
+        upper=0.4,
+        units='10e9/L',
+        age_lower=18,
+        age_upper=99,
+        age_units='years',
+        gender=[MALE, FEMALE])
+
+    neutrophils.add_grading(g3)
+    neutrophils.add_grading(g4)
