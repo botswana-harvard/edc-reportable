@@ -7,7 +7,6 @@ Reportable clinic events, reference ranges, grading
 
 ### Normal ranges
 
-    reference = ReferenceCollection()
     neutrophils = ValueReferenceGroup(name='neutrophils)
     ref = ValueReference(
         name='neutrophils',
@@ -19,9 +18,7 @@ Reportable clinic events, reference ranges, grading
         age_units='years',
         gender=[MALE, FEMALE])
     neutrophils.add_normal(ref)
-    reference.register(neutrophils)
     
-    neutrophils = reference.get('neutrophils')
     neutrophils.in_bounds(
         value=3.5, units='10e9/L',
         gender=MALE, dob=dob, report_datetime=report_datetime)
@@ -67,3 +64,21 @@ Reportable clinic events, reference ranges, grading
         gender=MALE, dob=dob, report_datetime=report_datetime)
     neutrophils.grade
     >>> 4
+
+### Add it to the site collection
+ 
+     reference = ReferenceCollection()
+     reference.register(neutrophils)
+
+### Add all
+     
+     reference.register(platelets)
+     reference.register(creatinine)
+     reference.register(sodium)
+     ...
+     ...
+ 
+### Get it from the collection
+ 
+     neutrophils = reference.get('neutrophils')
+ 
