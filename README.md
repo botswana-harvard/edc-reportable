@@ -19,6 +19,8 @@ Reportable clinic events, reference ranges, grading
         gender=[MALE, FEMALE])
     neutrophils.add_normal(ref)
     
+### Check if a value is normal
+
     neutrophils.in_bounds(
         value=3.5, units='10e9/L',
         gender=MALE, dob=dob, report_datetime=report_datetime)
@@ -53,6 +55,8 @@ Reportable clinic events, reference ranges, grading
     neutrophils.add_grading(g3)
     neutrophils.add_grading(g4)
 
+### Check if a value is "reportable"
+
     neutrophils.in_bounds_for_grade(
         value=0.43, units='10e9/L',
         gender=MALE, dob=dob, report_datetime=report_datetime)
@@ -65,7 +69,7 @@ Reportable clinic events, reference ranges, grading
     neutrophils.grade
     >>> 4
 
-### Add it to the site collection
+### Add `neutrophils` to the site collection
  
      reference = ReferenceCollection()
      reference.register(neutrophils)
@@ -78,7 +82,7 @@ Reportable clinic events, reference ranges, grading
      ...
      ...
  
-### Get it from the collection
+### Get `neutrophils` from the site collection
  
      neutrophils = reference.get('neutrophils')
  
