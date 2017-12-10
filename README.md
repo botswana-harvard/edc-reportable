@@ -37,7 +37,7 @@ And add to a group like this:
  
 Add as many normal references in a group as you like, just ensure the `lower` and `upper` boundaries don't overlap.
 
-> Note: If the lower and upper values of a normal reference overlap 
+> __Note:__ If the lower and upper values of a normal reference overlap 
 > with another normal reference, a `BoundaryOverlap` exception will be raised
 > when the value is evaluated. Catch this in your tests.
  
@@ -79,7 +79,7 @@ Once you have declared all your references, register them
         normal_data=normal_data,
         grading_data=grading_data)
 
-> Important: Writing out references is prone to error. It is better to declare a
+> __Important:__ Writing out references is prone to error. It is better to declare a
 > dictionary of normal references and grading references. Use the `parse` function
 > so that you can use a phrase like `13.5<=x<=17.5` instead of a listing attributes. 
 > There are examples of complete `normal_data` and `grading_data` in the tests.
