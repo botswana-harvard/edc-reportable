@@ -131,8 +131,10 @@ If a value is abnormal, `get_normal` returns `None`.
     if not normal:
         print('abnormal')
     >>> 'abnormal'
-    
-    # show the normal ranges that the value was evaluated against
+ 
+ To show which ranges the value was evaluated against
+
+    # use same options for units, gender, dob, report_datetime
     neutrophil.get_normal_description(**opts)
     >>> ['2.5<=x<=7.5 10^9/L MF, 18<=AGE years']
     
@@ -143,7 +145,7 @@ If a value is abnormal, `get_normal` returns `None`.
         gender=MALE, dob=dob, report_datetime=report_datetime)
 
     grade.grade
-    # >>> 3
+    >>> 3
     
     grade.description
     >>>
@@ -155,7 +157,7 @@ If a value is abnormal, `get_normal` returns `None`.
     grade.grade
     >>> 4
     
-### If the value is not evaluated against any reportable ranges, a `NotEvaluated` exception is raised
+If the value is not evaluated against any reportable ranges, a `NotEvaluated` exception is raised
 
     # call with the wrong units
     
