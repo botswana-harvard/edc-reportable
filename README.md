@@ -5,12 +5,12 @@
 Reportable clinic events, reference ranges, grading
 
 
-    from edc_reportable import ValueReferenceGroup, ValueReference, GradeReference
+    from edc_reportable import ValueReferenceGroup, NormalReference, GradeReference
 
 ### Normal ranges
 
     neutrophils = ValueReferenceGroup(name='neutrophils')
-    ref = ValueReference(
+    ref = NormalReference(
         name='neutrophils',
         lower=2.5,
         upper=7.5,
@@ -21,7 +21,7 @@ Reportable clinic events, reference ranges, grading
         gender=[MALE, FEMALE])
     
     ref.description()
-    >>> '2.5<x<7.5 in 10e9/L'
+    >>> '2.5<x<7.5 in 10e9/L M 18<AGE<99'
     
     neutrophils.add_normal(ref)
     
