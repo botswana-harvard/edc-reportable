@@ -57,8 +57,8 @@ A grading reference is declared like this:
         age_units='years',
         gender=[MALE, FEMALE])
     
-    g3
-    >>> GradeReference(neutrophils, 0.4<=x<=0.59 in 10e9/L GRADE 3, MF, 18<AGE<99 in years) GRADE 3)
+    >>> g3
+    GradeReference(neutrophils, 0.4<=x<=0.59 in 10e9/L GRADE 3, MF, 18<AGE<99 in years) GRADE 3)
 
 And added to the group like this:
 
@@ -87,6 +87,12 @@ Once you have declared all your references, register them
 > There are examples of complete `normal_data` and `grading_data` in the tests.
 > See`edc_reportable.tests.reportables`. 
 
+You can export your declared references to CSV for further inspection
+
+    >>> site_reportables.to_csv(name='my_project', path='~/')
+    
+    ('/Users/erikvw/my_project_normal_ranges.csv',
+    '/Users/erikvw/my_project_grading.csv')    
 
 ### Using your reportables
 
@@ -109,8 +115,8 @@ If a value is normal, `get_normal` returns the `NormalReference` instance that m
         gender=MALE, dob=dob, report_datetime=report_datetime)
 
     # returns a normal object with information about the range selected
-    normal.description
-    >>> '2.5<=3.5<=7.5 10^9/L MF, 18<=AGE years'
+    >>> normal.description
+    '2.5<=3.5<=7.5 10^9/L MF, 18<=AGE years'
 
 ### Check an abnormal value
 
@@ -124,15 +130,15 @@ If a value is abnormal, `get_normal` returns `None`.
     normal = neutrophil.get_normal(value=0.3, **opts)
 
     # returns None
-    if not normal:
-        print('abnormal')
-    >>> 'abnormal'
+    >>> if not normal:
+            print('abnormal')
+    'abnormal'
  
  To show which ranges the value was evaluated against
 
     # use same options for units, gender, dob, report_datetime
-    neutrophil.get_normal_description(**opts)
-    >>> ['2.5<=x<=7.5 10^9/L MF, 18<=AGE years']
+    >>> neutrophil.get_normal_description(**opts)
+    ['2.5<=x<=7.5 10^9/L MF, 18<=AGE years']
     
 ### Check if a value is "reportable"
 
@@ -140,29 +146,29 @@ If a value is abnormal, `get_normal` returns `None`.
         value=0.43, units='10^9/L',
         gender=MALE, dob=dob, report_datetime=report_datetime)
 
-    grade.grade
-    >>> 3
+    >>> grade.grade
+    3
     
-    grade.description
-    >>> '0.4<=0.43<=0.59 10^9/L GRADE 3'
+    >>> grade.description
+    '0.4<=0.43<=0.59 10^9/L GRADE 3'
 
     grade = neutrophil.get_grade(
         value=0.3, units='10^9/L',
         gender=MALE, dob=dob, report_datetime=report_datetime)
 
-    grade.grade
-    >>> 4
+    >>> grade.grade
+    4
 
-    grade.description
-    >>> '0.3<0.4 10^9/L GRADE 4'
+    >>> grade.description
+    '0.3<0.4 10^9/L GRADE 4'
     
 If the value is not evaluated against any reportable ranges, a `NotEvaluated` exception is raised
 
     # call with the wrong units
     
-    grade = neutrophil.get_grade(
-        value=0.3, units='mmol/L',
-        gender=MALE, dob=dob, report_datetime=report_datetime)
+    >>> grade = neutrophil.get_grade(
+            value=0.3, units='mmol/L',
+            gender=MALE, dob=dob, report_datetime=report_datetime)
 
-    >>> NotEvaluated: neutrophil value not graded. No reference range found ...
+    NotEvaluated: neutrophil value not graded. No reference range found ...
 
