@@ -36,6 +36,10 @@ And add to a group like this:
     neutrophils.add_normal(ref)
  
 Add as many normal references in a group as you like, just ensure the `lower` and `upper` boundaries don't overlap.
+
+> Note: If the lower and upper values of a normal reference overlap 
+> with another normal reference, a `BoundaryOverlap` exception will be raised
+> when the value is evaluated. Catch this in your tests.
  
 A grading reference is declared like this:
 
@@ -60,6 +64,10 @@ And added to the group like this:
     neutrophils.add_grading(g3)
 
 Declare and add a GradeReference for each reportable grade of the test. 
+
+> Note: If the lower and upper values of a grade reference overlap 
+> with another grade reference, a `BoundaryOverlap` exception will be raised
+> when the value is evaluated. Catch this in your tests.
 
 
 ### Registering with `site_reportables`
