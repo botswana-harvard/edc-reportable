@@ -101,13 +101,12 @@ In your code, get the references by collection name:
 
     neutrophil = my_project_reportables.get('neutrophil')
 
+    report_datetime = get_utcnow()
+    dob = (report_datetime - relativedelta(years=25)).date() 
     
 ### Check a normal value
 
 If a value is normal, `get_normal` returns the `NormalReference` instance that matched with the value. 
-
-    report_datetime = get_utcnow()
-    dob = (report_datetime - relativedelta(years=25)).date() 
 
     # evaluate a normal value
     normal = neutrophil.get_normal(
@@ -150,7 +149,7 @@ If a value is abnormal, `get_normal` returns `None`.
     >>> 3
     
     grade.description
-    >>>
+    >>> '0.4<=0.43<=0.59 10^9/L GRADE 3'
 
     grade = neutrophil.get_grade(
         value=0.3, units='10^9/L',
@@ -158,6 +157,9 @@ If a value is abnormal, `get_normal` returns `None`.
 
     grade.grade
     >>> 4
+
+    grade.description
+    >>> '0.3<0.4 10^9/L GRADE 4'
     
 If the value is not evaluated against any reportable ranges, a `NotEvaluated` exception is raised
 
