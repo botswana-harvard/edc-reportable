@@ -93,7 +93,9 @@ After declaring your `reportables`, register your `reportables` ranges and gradi
         grading_data=grading_data)
 
 
-### In your code, get the references by collection name:
+### Using your reportables
+
+In your code, get the references by collection name:
     
     my_project_reportables = site_reportables.get('my_project')
 
