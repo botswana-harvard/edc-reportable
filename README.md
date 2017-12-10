@@ -87,13 +87,6 @@ Once you have declared all your references, register them
 > There are examples of complete `normal_data` and `grading_data` in the tests.
 > See`edc_reportable.tests.reportables`. 
 
-After declaring your `reportables`, register your `reportables` ranges and grading. See `edc_reportable.tests.reportables` as an example.
-
-    site_reportables.register(
-        name='my_project',
-        normal_data=normal_data,
-        grading_data=grading_data)
-
 
 ### Using your reportables
 
