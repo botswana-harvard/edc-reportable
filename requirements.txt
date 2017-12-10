@@ -1,0 +1,2 @@
+git+https://github.com/botswana-harvard/edc-base@develop#egg=edc_base
+git+https://github.com/botswana-harvard/edc-constants@develop#egg=edc_constants
