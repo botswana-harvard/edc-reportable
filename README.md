@@ -5,11 +5,19 @@
 Reportable clinic events, reference ranges, grading
 
 
+    from dateutil.relativedelta import relativedelta
+    from edc_base.utils import get_utcnow
+    from edc_constants.constants import MALE, FEMALE
     from edc_reportable import ValueReferenceGroup, NormalReference, GradeReference
-
-### Normal ranges
+    from edc_reportable import site_reportables
+    from edc_reportable.tests.reportables import normal_data, grading_data
+    
+Create a group for each test:
 
     neutrophils = ValueReferenceGroup(name='neutrophils')
+
+A normal reference is declared like this:
+
     ref = NormalReference(
         name='neutrophils',
         lower=2.5,
@@ -20,19 +28,16 @@ Reportable clinic events, reference ranges, grading
         age_units='years',
         gender=[MALE, FEMALE])
     
-    ref.description()
-    >>> '2.5<x<7.5 in 10e9/L M 18<AGE<99'
+    ref
+    >>> NormalReference(neutrophils, 2.5<x<7.5 10e9/L MF, 18<AGE<99 years)   
+
+And add to a group like this:
     
     neutrophils.add_normal(ref)
-    
-### Check if a value is normal
-
-    neutrophils.in_bounds(
-        value=3.5, units='10e9/L',
-        gender=MALE, dob=dob, report_datetime=report_datetime)
-    >>> True  # normal
-
-### Grading
+ 
+Add as many normal references in a group as you like, just ensure the `lower` and `upper` boundaries don't overlap.
+ 
+A grading reference is declared like this:
 
     g3 = GradeReference(
         name='neutrophils',
@@ -46,55 +51,109 @@ Reportable clinic events, reference ranges, grading
         age_upper=99,
         age_units='years',
         gender=[MALE, FEMALE])
-
+    
     g3
     >>> GradeReference(neutrophils, 0.4<=x<=0.59 in 10e9/L GRADE 3, MF, 18<AGE<99 in years) GRADE 3)
 
-    g4 = GradeReference(
-        name='neutrophils',
-        grade=4,
-        lower=None,
-        upper=0.4,
-        units='10e9/L',
-        age_lower=18,
-        age_upper=99,
-        age_units='years',
-        gender=[MALE, FEMALE])
-
-    g4
-    >>> GradeReference(neutrophils, x<0.4 in 10e9/L GRADE 4, MF, 18<AGE<99 in years) GRADE 4)
+And added to the group like this:
 
     neutrophils.add_grading(g3)
-    neutrophils.add_grading(g4)
 
+Declare and add a GradeReference for each reportable grade of the test. 
+
+
+### Registering with `site_reportables`
+
+Once you have declared all your references, register them
+
+    site_reportables.register(
+        name='my_project',
+        normal_data=normal_data,
+        grading_data=grading_data)
+
+> Note: Writing out references is prone to error. It is better to declare a
+> dictionary of normal references and grading references. Use the `parse` function
+> so that you can use a phrase like `13.5<=x<=17.5` instead of a listing attributes. 
+
+There are examples of complete `normal_data` and `grading_data` in the tests. See `edc_reportable.tests.reportables`. 
+
+### After declaring your `reportables`, register your `reportables` ranges and grading. See `edc_reportable.tests.reportables` as an example.
+
+    site_reportables.register(
+        name='my_project',
+        normal_data=normal_data,
+        grading_data=grading_data)
+
+
+### In your code, get the references by collection name:
+    
+    my_project_reportables = site_reportables.get('my_project')
+
+    neutrophil = my_project_reportables.get('neutrophil')
+
+    
+### Check a normal value
+
+If a value is normal, `get_normal` returns the `NormalReference` instance that matched with the value. 
+
+    report_datetime = get_utcnow()
+    dob = (report_datetime - relativedelta(years=25)).date() 
+
+    # evaluate a normal value
+    normal = neutrophil.get_normal(
+        value=3.5, units='10^9/L',
+        gender=MALE, dob=dob, report_datetime=report_datetime)
+
+    # returns a normal object with information about the range selected
+    normal.description
+    >>> '2.5<=3.5<=7.5 10^9/L MF, 18<=AGE years'
+
+### Check an abnormal value
+
+If a value is abnormal, `get_normal` returns `None`.
+
+    # evaluate an abnormal value
+    opts = dict(
+        units='10^9/L',
+        gender=MALE, dob=dob,
+        report_datetime=report_datetime)
+    normal = neutrophil.get_normal(value=0.3, **opts)
+
+    # returns None
+    if not normal:
+        print('abnormal')
+    >>> 'abnormal'
+    
+    # show the normal ranges that the value was evaluated against
+    neutrophil.get_normal_description(**opts)
+    >>> ['2.5<=x<=7.5 10^9/L MF, 18<=AGE years']
+    
 ### Check if a value is "reportable"
 
-    neutrophils.in_bounds_for_grade(
-        value=0.43, units='10e9/L',
+    grade = neutrophil.get_grade(
+        value=0.43, units='10^9/L',
         gender=MALE, dob=dob, report_datetime=report_datetime)
-    neutrophils.grade
-    >>> 3
 
-    neutrophils.in_bounds_for_grade(
-        value=0.3, units='10e9/L',
+    grade.grade
+    # >>> 3
+    
+    grade.description
+    >>>
+
+    grade = neutrophil.get_grade(
+        value=0.3, units='10^9/L',
         gender=MALE, dob=dob, report_datetime=report_datetime)
-    neutrophils.grade
+
+    grade.grade
     >>> 4
+    
+### If the value is not evaluated against any reportable ranges, a `NotEvaluated` exception is raised
 
-### Add `neutrophils` to the site collection
- 
-     reference = ReferenceCollection()
-     reference.register(neutrophils)
+    # call with the wrong units
+    
+    grade = neutrophil.get_grade(
+        value=0.3, units='mmol/L',
+        gender=MALE, dob=dob, report_datetime=report_datetime)
 
-### Add all
-     
-     reference.register(platelets)
-     reference.register(creatinine)
-     reference.register(sodium)
-     ...
-     ...
- 
-### Get `neutrophils` from the site collection
- 
-     neutrophils = reference.get('neutrophils')
- 
+    >>> NotEvaluated: neutrophil value not graded. No reference range found ...
+
