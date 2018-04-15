@@ -15,7 +15,7 @@ setup(
     author=u'Erik van Widenfelt',
     author_email='ew2789@gmail.com',
     packages=find_packages(),
-    url='http://github.com/botswana-harvard/edc-reportable',
+    url='http://github.com/clinicedc/edc-reportable',
     license='GPL licence, see LICENCE',
     description='Reportable clinic events, reference ranges, grading',
     long_description=README,
