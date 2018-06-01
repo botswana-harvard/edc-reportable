@@ -99,7 +99,7 @@ class TestValueReference(TestCase):
                 units='mg/dL',
                 gender=MALE,
                 dob=dob),
-            ['10.0<x mg/dL M, 18<AGE years'])
+            ['10.0<x mg/dL M'])
 
         grp = ValueReferenceGroup(name='labtest')
 
@@ -208,8 +208,8 @@ class TestValueReference(TestCase):
                 gender=FEMALE, dob=dob,
                 report_datetime=report_datetime,
                 units='mg/dL'),
-            ['1.7<x<=3.5 mg/dL F, 18<AGE<99 years',
-             '7.3<x mg/dL F, 18<AGE<99 years'])
+            ['1.7<x<=3.5 mg/dL F',
+             '7.3<x mg/dL F'])
 
         # overlaps with ref_female3
         ref_female4 = NormalReference(
