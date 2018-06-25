@@ -11,11 +11,11 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
     name='edc-reportable',
-    version='0.1.1',
+    version='0.1.2',
     author=u'Erik van Widenfelt',
     author_email='ew2789@gmail.com',
     packages=find_packages(),
-    url='http://github.com/botswana-harvard/edc-reportable',
+    url='http://github.com/clinicedc/edc-reportable',
     license='GPL licence, see LICENCE',
     description='Reportable clinic events, reference ranges, grading',
     long_description=README,
